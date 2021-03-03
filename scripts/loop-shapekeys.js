@@ -3,6 +3,7 @@ const Scene = require('Scene');
 const D= require('Diagnostics');
 const Reactive = require('Reactive');
 const TouchGestures = require('TouchGestures');
+const Audio = require("Audio");
 
 
 (async function () {
@@ -13,12 +14,14 @@ const TouchGestures = require('TouchGestures');
     [
     Scene.root.findFirst("Hoverball.001"),
     Scene.root.findFirst("planeTracker0"),
-    Scene.root.findFirst("placer")
+    Scene.root.findFirst("placer"),
+    Audio.getAudioPlaybackController("audioPlaybackController0")
     ]
   ).then(function(assets){
     const hoverBall = assets[0];
     const planeTracker = assets[1];
     const placer = assets[2];
+    const playbackController = assets[3];
     const hoverBallShapes = hoverBall.getBlendShapes();
     
     const timeDriverParameters = {
@@ -56,6 +59,25 @@ const TouchGestures = require('TouchGestures');
       placerTransform.scaleY = gesture.scale.mul(snapshot.lastScaleY);
       placerTransform.scaleZ = gesture.scale.mul(snapshot.lastScaleZ);
     });
-  });
 
+    /**AUDIOCONTROLLER */
+    //Set play- and loop parameters for audio playback controller
+    playbackController.setPlaying(true);
+    playbackController.setLooping(true);
+
+    //==================================================
+    //Start and stop the audio by tapping on the screen
+    //==================================================
+    
+    //Create boolean to detect if the audio is playing
+    let isAudioPlaying = true;
+
+    //subscribe to tap gestures on the screen
+    TouchGestures.onTap().subscribe(function() {
+      //switch the boolean controlling audio playback
+      isAudioPlaying = !isAudioPlaying;
+      //start or stop the audio depending on the state of the boolean
+      playbackController.setPlaying(isAudioPlaying);
+    });
+  });
 })(); // Enables async/await in JS [part 2]
