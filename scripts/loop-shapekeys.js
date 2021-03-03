@@ -56,13 +56,6 @@ const TouchGestures = require('TouchGestures');
       placerTransform.scaleY = gesture.scale.mul(snapshot.lastScaleY);
       placerTransform.scaleZ = gesture.scale.mul(snapshot.lastScaleZ);
     });
-    //Rotation
-    TouchGestures.onRotate().subscribeWithSnapshot({
-      'lastRotationY' : placerTransform.rotationY,
-    }, function(gesture, snapshot){
-      const correctRotation = gesture.rotation.mul(-1);
-      placerTransform.rotationY = correctRotation.add(snapshot.lastRotationY);
-    });
   });
 
 })(); // Enables async/await in JS [part 2]
