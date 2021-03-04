@@ -23,7 +23,30 @@ const Audio = require("Audio");
     const placer = assets[2];
     const playbackController = assets[3];
     const hoverBallShapes = hoverBall.getBlendShapes();
+
+    /**AUDIOCONTROLLER */
+    //Set play- and loop parameters for audio playback controller
+    playbackController.setPlaying(true);
+    playbackController.setLooping(true);
+
+    //==================================================
+    //Start and stop the audio by tapping on the screen
+    //==================================================
     
+    //Create boolean to detect if the audio is playing
+    let isAudioPlaying = true;
+    D.watch('Boolean - ', isAudioPlaying);
+    D.watch('playing - ', playbackController.playing);
+
+    //subscribe to tap gestures on the screen
+    TouchGestures.onTap().subscribe(function() {
+      //switch the boolean controlling audio playback
+      isAudioPlaying = !isAudioPlaying;
+      //start or stop the audio depending on the state of the boolean
+      playbackController.setPlaying(isAudioPlaying);
+    });
+    
+    //Set time driver parameters
     const timeDriverParameters = {
       durationMilliseconds: 10000,
       loopCount: Infinity,
@@ -58,26 +81,6 @@ const Audio = require("Audio");
       placerTransform.scaleX = gesture.scale.mul(snapshot.lastScaleX);
       placerTransform.scaleY = gesture.scale.mul(snapshot.lastScaleY);
       placerTransform.scaleZ = gesture.scale.mul(snapshot.lastScaleZ);
-    });
-
-    /**AUDIOCONTROLLER */
-    //Set play- and loop parameters for audio playback controller
-    playbackController.setPlaying(true);
-    playbackController.setLooping(true);
-
-    //==================================================
-    //Start and stop the audio by tapping on the screen
-    //==================================================
-    
-    //Create boolean to detect if the audio is playing
-    let isAudioPlaying = true;
-
-    //subscribe to tap gestures on the screen
-    TouchGestures.onTap().subscribe(function() {
-      //switch the boolean controlling audio playback
-      isAudioPlaying = !isAudioPlaying;
-      //start or stop the audio depending on the state of the boolean
-      playbackController.setPlaying(isAudioPlaying);
     });
   });
 })(); // Enables async/await in JS [part 2]
